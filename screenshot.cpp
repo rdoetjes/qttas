@@ -77,6 +77,7 @@ void Screenshot::saveScreenshot()
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDirectory(initialPath);
     QStringList mimeTypes;
+    
     foreach (const QByteArray &bf, QImageWriter::supportedMimeTypes())
         mimeTypes.append(QLatin1String(bf));
     fileDialog.setMimeTypeFilters(mimeTypes);
