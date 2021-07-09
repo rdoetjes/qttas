@@ -33,9 +33,9 @@ int movesToSafePlace(int pos, int *obstacles){
     //when beginning we need to be very cary to merge into traffic
     if (pos == 4) if (obstacles[2] == 0) return -1;
 
+    //We have a bias for the fasdt lane :P
     if (obstacles[0] == 0) return 0 - pos; 
 
-    //we have a bias for the center position
     if (obstacles[1] == 0) return 1 - pos;
 
     if (obstacles[2] == 0) return 2 - pos ;
