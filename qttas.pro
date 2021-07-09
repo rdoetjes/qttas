@@ -10,3 +10,4 @@ SOURCES             = main.cpp \
 # install
 target.path = ./screenshot
 INSTALLS += target
+@LIBS += -lXtst -lX11@

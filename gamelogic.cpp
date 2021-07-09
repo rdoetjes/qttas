@@ -30,6 +30,9 @@ void getObstacles(QImage *img, int *obstacles){
 }
 
 int movesToSafePlace(int pos, int *obstacles){
+    //when beginning we need to be very cary to merge into traffic
+    if (pos == 4) if (obstacles[pos-1] == 0) return -1;
+
     //we have a bias for the center position
     if (obstacles[1] == 0) return 1 - pos;
 
@@ -40,18 +43,30 @@ int movesToSafePlace(int pos, int *obstacles){
     return 0;
 }
 
-void avoidObstacles(int *myPosition, int *obstacles){
+int avoidObstacles(int *myPosition, int *obstacles){
    int pos = 0;
    
    //find the car's curremt position on screen
    while(!myPosition[pos]) { pos++; }
 
    //we have nothing to fear in start position or the hitchhiker position   
-   std::cout << movesToSafePlace(pos, obstacles) << "\n";          
+  return movesToSafePlace(pos, obstacles);
 
 }
 
+void sendKeyCode(Display* X11Handle, int key){
+    unsigned int keycode = XKeysymToKeycode(X11Handle, key);
+    XTestFakeKeyEvent(X11Handle, keycode, True, 0);
+    XTestFakeKeyEvent(X11Handle, keycode, False, 0);
+    XFlush(X11Handle);
+}
+
 void gameLogic(QPixmap *screen){
+   static Display *X11Handle = NULL;
+
+   if (X11Handle==NULL)
+      X11Handle = XOpenDisplay(NULL);
+
    int obstacles[] {0, 0, 0} ; 
    int myPosition[] {0, 0, 0, 0, 0};
 
@@ -61,7 +76,14 @@ void gameLogic(QPixmap *screen){
 
    getMyPosition(&img, myPosition);
 
-   avoidObstacles(myPosition, obstacles);
+   int move = avoidObstacles(myPosition, obstacles);
+   std::cout << move << ".\n";
+   
+   if (move < 0)
+     for(int i=0; i<abs(move); i++) sendKeyCode(X11Handle, XK_Left);
+   
+   if( move > 0)
+     for(int i=0; i<move; i++) sendKeyCode(X11Handle, XK_Right);
 
    return ;
 }

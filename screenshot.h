@@ -3,6 +3,7 @@
 
 #include <QPixmap>
 #include <QWidget>
+
 #include "gamelogic.h"
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +24,7 @@ class Screenshot : public QWidget
 
 public:
     Screenshot();
+    Display *X11Handle;
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
