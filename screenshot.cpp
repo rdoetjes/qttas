@@ -98,6 +98,10 @@ void Screenshot::shootScreen()
         return;
 
     originalPixmap = screen->grabWindow(0);
+    
+    //Game logic processing
+    gameLogic(&originalPixmap);
+
     updateScreenshotLabel();
 }
 

@@ -3,6 +3,7 @@
 
 #include <QPixmap>
 #include <QWidget>
+#include "gamelogic.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;

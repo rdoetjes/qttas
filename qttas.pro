@@ -1,9 +1,11 @@
 QT += widgets
 requires(qtConfig(filedialog))
 
-HEADERS             = screenshot.h
+HEADERS             = screenshot.h \
+                      gamelogic.h
 SOURCES             = main.cpp \
-                      screenshot.cpp
+                      screenshot.cpp \
+                      gamelogic.cpp
 
 # install
 target.path = ./screenshot
