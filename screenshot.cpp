@@ -61,7 +61,7 @@ void Screenshot::gameCapture()
     if (const QWindow *window = windowHandle())
         screen = window->screen();    
 
-    grabScreenTimer->start( 500 );
+    grabScreenTimer->start( 250 );
 }
 
 void Screenshot::saveScreenshot()
