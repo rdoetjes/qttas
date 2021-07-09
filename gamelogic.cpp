@@ -31,7 +31,7 @@ void getObstacles(QImage *img, int *obstacles){
 
 int movesToSafePlace(int pos, int *obstacles){
     //when beginning we need to be very cary to merge into traffic
-    if (pos == 4) if (obstacles[2] == 0) return -2; //-1 is the index of the hitchhiker postion so we jump -2
+    if (pos == 4) if (obstacles[2] == 0) return 1 - pos; 
 
     //We have a bias for the fasdt lane :P
     if (obstacles[0] == 0) return 0 - pos; 
