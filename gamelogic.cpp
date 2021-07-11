@@ -4,17 +4,26 @@ using namespace std;
 typedef vector< vector<int> > Matrix;
 
 
-void processImage(QImage *img, Matrix &decision, int *gameObjectsToTrack){
+/*
+* Checks the X, Y pixel value for a RED value < threshold and then sets index to value
+*/
+void processImage(QImage *img, Matrix &decisionMatrix, int *gameObjectsToTrack){
    QColor pix;
-   for (long unsigned int i=0; i < decision.size(); i++){
-       pix = img->pixelColor( decision[i][0], decision[i][1]);
-       if (pix.red() < decision[i][2]) gameObjectsToTrack[ decision[i][3] ] = decision[i][4];
+   for (long unsigned int i=0; i < decisionMatrix.size(); i++){
+       pix = img->pixelColor( decisionMatrix[i][0], decisionMatrix[i][1]);
+       if (pix.red() < decisionMatrix[i][2]) gameObjectsToTrack[ decisionMatrix[i][3] ] = decisionMatrix[i][4];
    }  
 
 }
 
+/*
+* Sets the position in myPosition array to 1 where the car is currently located on the screen
+*/
 void getMyPosition(QImage *img, int *myPosition){
-    Matrix decision = {
+    /*
+    * Y, Y, RED VALUE LESS THAN, INDEX of MyPosition, Value to set it to
+    */
+    Matrix findCurrentCarPosition = {
         {858, 798, 40, 0, 1},
         {984, 798, 40, 1, 1},
         {1106, 798, 40, 2, 1},
@@ -23,7 +32,7 @@ void getMyPosition(QImage *img, int *myPosition){
 
     };
 
-    processImage(img, decision, myPosition);
+    processImage(img, findCurrentCarPosition, myPosition);
 
  /*
   * This was the code as it was shown in the video
@@ -49,13 +58,16 @@ void getMyPosition(QImage *img, int *myPosition){
 }
 
 void getObstacles(QImage *img, int *obstacles){
-   Matrix decision = { 
+   /*
+   * X, Y, Red Pixel value less than, obstacle, value to set obstacle to if found
+   */
+   Matrix findCurrentObstacles = { 
        {852, 735, 40, 0, 1},
        {960, 712, 40, 1, 1},
        {1030, 726, 40, 2, 1} 
    }; 
     
-    processImage(img, decision, obstacles);
+    processImage(img, findCurrentObstacles, obstacles);
 
   /*
   * This was the code as it was shown in the video
@@ -74,6 +86,12 @@ void getObstacles(QImage *img, int *obstacles){
    */
 }
 
+/*
+* Moves the car into the lane where there is no obstacle currently
+* It returns the number of positions to move from current position
+* Where a negative number means the number of positions to move the left
+* Where a positive number means the number of positions to move to the right 
+*/
 int movesToSafePlace(int pos, int *obstacles){
     //when beginning we need to be very cary to merge into traffic
     if (pos == 4) if (obstacles[2] == 0) return -1; 
@@ -88,6 +106,12 @@ int movesToSafePlace(int pos, int *obstacles){
     return 0;
 }
 
+/*
+* avoidOnbstacles is a convenienve wrapper function that first gets our own current position
+* and passes it on to movesToSafePlace.
+*
+* Since we always need to move our car in relation to our current position, a wrapper function makes sense.
+*/
 int avoidObstacles(int *myPosition, int *obstacles){
    int pos = 0;
    
@@ -99,6 +123,9 @@ int avoidObstacles(int *myPosition, int *obstacles){
 
 }
 
+/*
+* Send a keystroke to the X11 environment
+*/
 void sendKeyCode(Display* X11Handle, int key){
     unsigned int keycode = XKeysymToKeycode(X11Handle, key);
     XTestFakeKeyEvent(X11Handle, keycode, True, 0);
@@ -106,6 +133,13 @@ void sendKeyCode(Display* X11Handle, int key){
     XFlush(X11Handle);
 }
 
+/*
+* Game logic will create a handle to X11 (to send keystrokes to play the game)
+* Turn the Pixmap into a greyscale QImage
+* Then determines where the obstacles are on the road
+* And the determines how to avoid those obstacles
+* And sends these movement instructions in the form of keypresses to X11
+*/
 void gameLogic(QPixmap *screen){
    static Display *X11Handle = NULL;
 
