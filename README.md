@@ -3,8 +3,9 @@
 QTTas stands for Qt Tool Assisted Speedrun.
 It's a tutorial on how to start setting up a quick and asynchornous screenshit based TAS or TAG.
 
-See video:
-Code for the video https://youtu.be/P45LZymkMmo
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/P45LZymkMmo/0.jpg)](https://www.youtube.com/watch?v=P45LZymkMmo)
+
+
 URL to play the game we are controlling: http://bdrgames.nl/lcdgames/games/highway/index.html
 NOTICE: You would need to set the matrices with X, Y coordinates for your own screen/browser size; this is a demonstration only
 
